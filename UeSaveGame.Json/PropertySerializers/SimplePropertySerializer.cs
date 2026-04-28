@@ -19,7 +19,7 @@ namespace UeSaveGame.Json.PropertySerializers
 	/// <summary>
 	/// Base class for properties with a primitive value
 	/// </summary>
-	internal abstract class SimplePropertySerializer : IPropertySerializer
+	public abstract class SimplePropertySerializer : IPropertySerializer
 	{
 		public void ToJson(FProperty property, JsonWriter writer)
 		{

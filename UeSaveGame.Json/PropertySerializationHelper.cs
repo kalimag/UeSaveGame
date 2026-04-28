@@ -21,7 +21,7 @@ namespace UeSaveGame.Json
 	/// <summary>
 	/// Helper methods for reading and writing properties as json
 	/// </summary>
-	internal static class PropertySerializationHelper
+	public static class PropertySerializationHelper
 	{
 		private static readonly MethodInfo sMoveToContentMethod;
 

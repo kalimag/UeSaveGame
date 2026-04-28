@@ -19,7 +19,7 @@ namespace UeSaveGame.Json
 	/// <summary>
 	/// Json serializer for a property value
 	/// </summary>
-	internal interface IPropertySerializer
+	public interface IPropertySerializer
 	{
 		/// <summary>
 		/// Serialize the value of a property to json

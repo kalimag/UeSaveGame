@@ -18,7 +18,7 @@ namespace UeSaveGame.PropertyTypes
 {
 	public class ObjectProperty : FProperty
 	{
-		public FString? ObjectType { get; internal set; }
+		public FString? ObjectType { get; set; }
 
 		public ObjectProperty(FString name)
 			: base(name)

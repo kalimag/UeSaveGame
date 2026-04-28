@@ -95,6 +95,25 @@ namespace UeSaveGame
 			};
 		}
 
+		/// <summary>
+		/// Register a custom property type or a custom implementation of a standard property type.
+		/// </summary>
+		/// <param name="typeName">The name of the property as it appears in serialized data</param>
+		/// <param name="propertyType">The type that will handle serializtion of the property</param>
+		/// <exception cref="ArgumentNullException">An argument is null</exception>
+		/// <exception cref="ArgumentException">The passed in type does not meet the requirements for a property serializer</exception>
+		public static void RegisterPropertyType(string typeName, Type propertyType)
+		{
+			if (typeName is null) throw new ArgumentNullException(nameof(typeName));
+			if (propertyType is null) throw new ArgumentNullException(nameof(propertyType));
+
+			if (!propertyType.IsAssignableTo(typeof(FProperty)) || propertyType.IsAbstract)
+			{
+				throw new ArgumentException($"Property type {propertyType.FullName} must be a non-abstract subclass of FProperty");
+			}
+			sTypeMap[typeName] = propertyType;
+		}
+
 		public static FProperty Create(FString name, FPropertyTypeName type)
 		{
 			return (FProperty)Activator.CreateInstance(ResolveType(type.Name), name)!;

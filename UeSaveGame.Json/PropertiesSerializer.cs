@@ -66,6 +66,20 @@ namespace UeSaveGame.Json
 		}
 
 		/// <summary>
+		/// Register a custom json serializer for a property type
+		/// </summary>
+		/// <param name="typeName">The name of the property as it appears in serialized data</param>
+		/// <param name="serializer">The custom serializer to use when serializing properties of the specified type</param>
+		/// <exception cref="ArgumentNullException">An argument is null</exception>
+		public static void RegisterPropertySerializer(string typeName, IPropertySerializer serializer)
+		{
+			if (typeName is null) throw new ArgumentNullException(nameof(typeName));
+			if (serializer is null) throw new ArgumentNullException(nameof(serializer));
+
+			sSerializerMap[typeName] = serializer;
+		}
+
+		/// <summary>
 		/// Serialize a list of properties to json
 		/// </summary>
 		/// <param name="data">The properties to serialize</param>
