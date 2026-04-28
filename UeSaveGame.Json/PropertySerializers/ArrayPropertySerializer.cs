@@ -71,6 +71,10 @@ namespace UeSaveGame.Json.PropertySerializers
 
 				writer.WriteEndArray();
 			}
+			else if (arrayProperty.Value is byte[] byteArray)
+			{
+				writer.WriteValue(Convert.ToBase64String(byteArray));
+			}
 			else
 			{
 				writer.WriteStartArray();
@@ -196,26 +200,33 @@ namespace UeSaveGame.Json.PropertySerializers
 
 			if (valueToken is not null)
 			{
-				if (valueToken is not JContainer arrayToken)
-				{
-					throw new InvalidDataException("Array property value is not an array");
-				}
-
 				FProperty prototype = FProperty.Create(FString.Empty, arrayProperty.ItemType) ?? throw new InvalidDataException($"Invalid array item type {arrayProperty.ItemType}");
 
 				if (prototype.IsSimpleProperty)
 				{
-					if (prototype.SimpleValueType == typeof(FString) || prototype is ByteProperty && arrayToken.First is JValue jv && jv.Value is string)
+					if (prototype is ByteProperty && valueToken.Type == JTokenType.String)
 					{
-						string[]? value = arrayToken.ToObject<string[]>();
-						if (value is not null)
-						{
-							arrayProperty.Value = value.Select(v => new FString(v)).ToArray();
-						}
+						arrayProperty.Value = Convert.FromBase64String(valueToken.ToObject<string>()!);
 					}
 					else
 					{
-						arrayProperty.Value = (Array?)arrayToken.ToObject(prototype.SimpleValueType.MakeArrayType());
+						if (valueToken is not JContainer arrayToken)
+						{
+							throw new InvalidDataException("Array property value is not an array");
+						}
+
+						if (prototype.SimpleValueType == typeof(FString) || prototype is ByteProperty && arrayToken.First is JValue jv && jv.Value is string)
+						{
+							string[]? value = arrayToken.ToObject<string[]>();
+							if (value is not null)
+							{
+								arrayProperty.Value = value.Select(v => new FString(v)).ToArray();
+							}
+						}
+						else
+						{
+							arrayProperty.Value = (Array?)arrayToken.ToObject(prototype.SimpleValueType.MakeArrayType());
+						}
 					}
 				}
 				else
