@@ -1,4 +1,5 @@
 ﻿// Copyright 2025 Crystal Ferrai
+// Copyright 2026 kalimag
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,11 +54,12 @@ namespace UeSaveGame.Json.PropertySerializers
 
 			writer.WritePropertyName(nameof(StructProperty.Value));
 			IStructDataSerializer? dataSerializer;
-			if (structProperty.StructType is not null &&
+			if (
 				(
-				sTypeMap.TryGetValue(structProperty.StructType!.Name, out dataSerializer) ||
-				sNameMap.TryGetValue(structProperty.StructType!.Name, out dataSerializer))
-				)
+				structProperty.StructType is not null &&
+				sTypeMap.TryGetValue(structProperty.StructType!.Name, out dataSerializer)
+				) ||
+				sNameMap.TryGetValue(structProperty.PropertyName, out dataSerializer))
 			{
 				dataSerializer.ToJson(structProperty.Value, writer);
 			}

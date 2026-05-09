@@ -1,4 +1,5 @@
 ﻿// Copyright 2025 Crystal Ferrai
+// Copyright 2026 kalimag
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +28,11 @@ namespace UeSaveGame
 
 		// Name of the property tag that owns this property
 		protected readonly FString mPropertyName;
+
+		/// <summary>
+		/// Name of the property tag that owns this property
+		/// </summary>
+		public FString PropertyName => mPropertyName;
 
 		/// <summary>
 		/// Gets a mapping of property type names to property types
