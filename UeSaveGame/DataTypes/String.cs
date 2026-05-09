@@ -1,4 +1,5 @@
 ﻿// Copyright 2025 Crystal Ferrai
+// Copyright 2026 kalimag
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +14,7 @@
 // limitations under the License.
 
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace UeSaveGame
@@ -159,14 +161,16 @@ namespace UeSaveGame
 			return new FString(a + b.Value, encoding, b.mHashSeed);
 		}
 
-		public static implicit operator string(FString instance)
+		[return: NotNullIfNotNull(nameof(instance))]
+		public static implicit operator string?(FString? instance)
 		{
-			return instance.Value;
+			return instance?.Value;
 		}
 
-		public static explicit operator FString(string instance)
+		[return: NotNullIfNotNull(nameof(instance))]
+		public static explicit operator FString?(string? instance)
 		{
-			return new FString(instance);
+			return instance is null ? null : new FString(instance);
 		}
 
 		public override string ToString()
