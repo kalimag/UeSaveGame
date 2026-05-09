@@ -1,4 +1,5 @@
 ﻿// Copyright 2025 Crystal Ferrai
+// Copyright 2026 kalimag
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,7 +65,7 @@ namespace UeSaveGame.DataTypes
 				FString? path = PackageName;
 				if (PackageName is not null && AssetName is not null)
 				{
-					path = new($"{PackageName},{AssetName}");
+					path = new($"{PackageName}.{AssetName}");
 				}
 				writer.WriteUnrealString(path);
 			}
