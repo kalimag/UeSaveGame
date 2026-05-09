@@ -1,4 +1,5 @@
 ﻿// Copyright 2025 Crystal Ferrai
+// Copyright 2026 kalimag
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,7 +70,7 @@ namespace UeSaveGame
 		/// <param name="stream">The stream to read from</param>
 		/// <exception cref="NotSupportedException">Unsupported save game version</exception>
 		/// <exception cref="FormatException">A problem occurred trying to parse the save game</exception>
-		public static SaveGame LoadFrom(Stream stream)
+		public static SaveGame LoadFrom(Stream stream, bool verifyEndOfFile)
 		{
 			SaveGame instance = new();
 
@@ -103,11 +104,19 @@ namespace UeSaveGame
 					instance.Properties = new List<FPropertyTag>(PropertySerializationHelper.ReadProperties(reader, instance.Versions.PackageVersion, true));
 				}
 
-				if (reader.BaseStream.CanSeek && reader.BaseStream.Position != reader.BaseStream.Length) throw new FormatException("Did not reach the end of the file when reading.");
+				if (verifyEndOfFile && reader.BaseStream.CanSeek && reader.BaseStream.Position != reader.BaseStream.Length) throw new FormatException("Did not reach the end of the file when reading.");
 			}
 
 			return instance;
 		}
+
+		/// <summary>
+		/// Loads a save game from the given stream
+		/// </summary>
+		/// <param name="stream">The stream to read from</param>
+		/// <exception cref="NotSupportedException">Unsupported save game version</exception>
+		/// <exception cref="FormatException">A problem occurred trying to parse the save game</exception>
+		public static SaveGame LoadFrom(Stream stream) => LoadFrom(stream, true);
 
 		/// <summary>
 		/// Saves a save game to the given stream
