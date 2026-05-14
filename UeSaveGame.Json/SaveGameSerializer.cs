@@ -1,4 +1,5 @@
 ﻿// Copyright 2025 Crystal Ferrai
+// Copyright 2026 kalimag
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -75,12 +76,10 @@ namespace UeSaveGame.Json
 		/// <summary>
 		/// Converts a save game to json
 		/// </summary>
-		/// <param name="input">A stream containing a complete binary save game</param>
+		/// <param name="save">The save game to convert</param>
 		/// <param name="output">A stream that will receive the converted json save game</param>
-		public void ConvertToJson(Stream input, Stream output)
+		public void ConvertToJson(SaveGame save, Stream output)
 		{
-			SaveGame save = SaveGame.LoadFrom(input);
-
 			using StreamWriter sw = new(output, mEncoding, leaveOpen: true);
 			using JsonWriter writer = new JsonTextWriter(sw)
 			{
@@ -130,11 +129,20 @@ namespace UeSaveGame.Json
 		}
 
 		/// <summary>
+		/// Converts a save game to json
+		/// </summary>
+		/// <param name="input">A stream containing a complete binary save game</param>
+		/// <param name="output">A stream that will receive the converted json save game</param>
+		public void ConvertToJson(Stream input, Stream output)
+		{
+			ConvertToJson(SaveGame.LoadFrom(input), output);
+		}
+
+		/// <summary>
 		/// Converts a save game from json
 		/// </summary>
-		/// <param name="input">A stream containing a complete json save game</param>
 		/// <param name="output">A stream that will received the converted binary save game</param>
-		public void ConvertFromJson(Stream input, Stream output)
+		public SaveGame ConvertFromJson(Stream input)
 		{
 			SaveGame save = new();
 
@@ -193,9 +201,20 @@ namespace UeSaveGame.Json
 				}
 			}
 
-			save.WriteTo(output);
-
 			reader.Close();
+
+			return save;
+		}
+
+		/// <summary>
+		/// Converts a save game from json
+		/// </summary>
+		/// <param name="input">A stream containing a complete json save game</param>
+		/// <param name="output">A stream that will received the converted binary save game</param>
+		public void ConvertFromJson(Stream input, Stream output)
+		{
+			var save = ConvertFromJson(input);
+			save.WriteTo(output);
 		}
 
 		private static void CurrentDomain_AssemblyLoad(object? sender, AssemblyLoadEventArgs args)
